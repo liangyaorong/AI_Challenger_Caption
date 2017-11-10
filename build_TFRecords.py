@@ -87,10 +87,10 @@ def _load_image_caption(caption_path):
 def _create_word_dict(all_tokenized_captions, min_word_count, word_count_output_file_path=None):
     '''
     根据所有caption建立词库
-    :param all_tokenized_captions:
-    :param min_word_count:
-    :param word_count_output_file_path:
-    :return:
+    :param all_tokenized_captions: 所有分好词的描述 [[words]]
+    :param min_word_count: 总出现次数少于该值则统一标记为"其他词"
+    :param word_count_output_file_path: 将词典保存到本地的路径
+    :return: 词典{word:frequency}
     '''
     counter = Counter()
     for tokenized_caption in all_tokenized_captions:
@@ -114,7 +114,7 @@ def _to_sequence_example(image_path, image_meta_data, wordDecoder):
     :param image_path: 照片所在文件夹
     :param image_meta_data: ImageMetaData对象,里面有一句caption
     :param wordDecoder: caption2vet
-    :return: 将照片和caption,caption_id联系在一起的sequence_example
+    :return: 将照片和对应caption,caption_id封装在一起的sequence_example
     '''
     image_full_filename = image_path + "/" + image_meta_data.filename
     with tf.gfile.FastGFile(image_full_filename, "r") as f:
@@ -170,21 +170,18 @@ def _build_tfRecord(images_path, separate_image_meta_data, output_path, num_batc
     for i in range(len(shard_range)-1):
         range_list.append(range(shard_range[i], shard_range[i+1]))
 
-
+    print "start building TFRecords"
+    
     coord = tf.train.Coordinator()
-
     threads = []
     for thread_id in range(num_threads):
         args = (images_path, output_path, separate_image_meta_data, range_list[thread_id], wordDecoder, num_batches, thread_id)
         t = threading.Thread(target=_build_tfRecord_single_thread, args=args)
         t.start()
         threads.append(t)
-
     coord.join(threads)
 
     print "finished building all TFRecords"
-
-
 
 
 if __name__ == "__main__":
@@ -204,13 +201,11 @@ if __name__ == "__main__":
         ImageMetadata(image.filename, [caption]) for image in images_meta_data_list for caption in image.captions
     ]
 
-    # Shuffle the ordering of images. Make the randomization repeatable.
+    # 乱序
     random.seed(12345)
     random.shuffle(separate_images_meta_data_list)
 
-    print "start building TFRecords"
     _build_tfRecord(images_path, separate_images_meta_data_list, TFRecord_output_path, 100, 4, word_decoder)
-    # print len(word_dict)
 
 
 
