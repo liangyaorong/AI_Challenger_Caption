@@ -86,7 +86,7 @@ def _load_image_caption(caption_path):
 
 def _create_word_dict(all_tokenized_captions, min_word_count, word_count_output_file_path=None):
     '''
-    根据所有caption
+    根据所有caption建立词库
     :param all_tokenized_captions:
     :param min_word_count:
     :param word_count_output_file_path:
