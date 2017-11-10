@@ -3,20 +3,17 @@
 import tensorflow as tf
 import numpy as np
 import random
-import os
 import json
 import jieba
 
 from collections import Counter
 from collections import namedtuple
 
-
 import threading
 
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
 
 
 ImageMetadata = namedtuple("ImageMetadata", ["filename", "captions"])
