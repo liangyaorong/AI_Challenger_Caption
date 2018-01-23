@@ -26,17 +26,18 @@ def compute_avg_bleu(reference_json_path, inference_json_path, max_order):
     references_dict = {}
     for data in references_data:
         image_id = data["image_id"]
+        # print(image_id)
         references = data["caption"]
         references_dict[image_id] = references
-
-    bleu_all = [0]*image_num
+    bleu_all = [0] * image_num
     for (i, data) in enumerate(inference_data):
         image_id = data["image_id"]
-        inference = data["caption"][0]
-        bleu_all[i]=compute_bleu(references_dict[image_id], inference, max_order)
-    return sum(bleu_all)/image_num
+        inference = data["caption"]
+        bleu = compute_bleu(references_dict[image_id+".jpg"], inference, max_order)
+        bleu_all[i] = bleu
+    return sum(bleu_all) / image_num
 
 
-print(compute_avg_bleu("/home/leon/MachineLearning/AIChallenger_caption/ai_challenger_caption_validation_20170910/caption_validation_annotations_20170910.json",
-                       "/home/leon/MachineLearning/AIChallenger_caption/test_data/image_test/test_output.json",
-                       2))
+print(compute_avg_bleu("/home/leon/ML/AI_Challenger/Image_Caption/ai_challenger_caption_validation_20170910/caption_validation_annotations_20170910.json",
+                       "/home/leon/ML/AI_Challenger/Image_Caption/ai_challenger_caption_validation_20170910/caption_validation_inference.json",
+                       1))
