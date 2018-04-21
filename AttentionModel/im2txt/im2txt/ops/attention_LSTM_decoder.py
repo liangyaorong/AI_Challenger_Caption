@@ -1,3 +1,9 @@
+'''
+author: Liang YaoRong
+email: liangyaorong1995@outlook.com
+'''
+
+
 import tensorflow as tf
 from tensorflow.python.ops import array_ops
 import tensorflow.contrib.slim as slim
