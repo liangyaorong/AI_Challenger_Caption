@@ -1,5 +1,10 @@
 #coding:utf-8
 
+'''
+author: Liang YaoRong
+email: liangyaorong1995@outlook.com
+'''
+
 
 # from __future__ import absolute_import
 from __future__ import division
